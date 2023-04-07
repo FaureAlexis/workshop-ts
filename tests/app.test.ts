@@ -1,11 +1,18 @@
-const request = require('supertest');
-const express = require('express');
-const app = require('../src/index');
+import request from "supertest";
+import { Request, Response } from "express";
+import app from '../src/index';
 
-const addition = require('../src/addition');
-const cleanString = require('../src/cleanString');
-const greetUser = require('../src/greetUser');
+import addition from "../src/addition";
+import User from '../src/types/user';
+import cleanString from "../src/cleanString";
+import {verifyUser, greetUser} from '../src/greetUser';
 
+describe('1 + 1 = 2', () => {
+  test("Addition should be okay", (done) => {
+    expect(addition(1, 1)).toBe(2);
+    done();
+  })
+})
 
 describe('Test the root path', () => {
   test('It should response the GET method with "Hello, world!"', (done) => {
@@ -48,10 +55,11 @@ describe('Test the /cleanString endpoint', () => {
 
 describe('Test the /greetUser endpoint', () => {
   test('It should response the POST method with the correct greeting', (done) => {
-    const user = {
-        name: 'John',
-        role: 'admin',
-    };
+    const user: User = {
+      name: 'John',
+      role: 'admin',
+      email: 'john.doe@mail.com',
+    }
     request(app)
       .post('/greetUser')
       .send({ user })
@@ -62,3 +70,7 @@ describe('Test the /greetUser endpoint', () => {
       });
   });
 });
+
+afterAll((done) => {
+  done();
+})
